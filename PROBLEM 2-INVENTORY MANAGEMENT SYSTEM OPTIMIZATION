@@ -1,0 +1,187 @@
+User Input (Product ID/Name, Sales Data, Inventory Adjustments) -> Inventory Tracking Application -> Reorder Calculation Algorithm
+                 ^                                                                              |
+                 |                                                                              v
+           Alert on Low Stock
+                                                        Generate Reports (Inventory Turnover, Stockouts, Cost Implications)
+
+INVENTORY TRACKING APPLICATION:-
+
+class Product:
+    def __init__(self, product_id, name, initial_stock, reorder_point, reorder_quantity):if product_id not in self.products:
+            self.products[product_id] = Product(product_id, name, initial_stock, reorder_point, reorder_quantity)
+        else:
+            print(f"Product with ID {product_id} already exists.")
+    
+    def track_inventory(self, product_id, adjustment):
+        if product_id in self.products:
+            self.products[product_id].update_stock(adjustment)
+            if self.products[product_id].stock < self.products[product_id].reorder_point:
+                self.generate_reorder_alert(product_id)
+        else:
+            print(f"Product with ID {product_id} does not exist.")
+    
+    def generate_reorder_alert(self, product_id):
+        print(f"Alert: Product {self.products[product_id].name} is below reorder point. Current stock: {self.products[product_id].stock}")
+    
+    def get_product_stock(self, product_id):
+        self.product_id = product_id
+        self.name = name
+        self.stock = initial_stock
+        self.reorder_point = reorder_point
+        self.reorder_quantity = reorder_quantity
+    
+    def update_stock(self, adjustment):
+        self.stock += adjustment
+
+class InventoryManagementSystem:
+    def __init__(self):
+        self.products = {}
+    
+    def add_product(self, product_id, name, initial_stock, reorder_point, reorder_quantity):if product_id in self.products:
+            return self.products[product_id].stock
+        else:
+            return None
+
+# Example usage:
+ims = InventoryManagementSystem()
+ims.add_product(1, "Keyboard", 50, 10, 50)
+ims.add_product(2, "Mouse", 75, 15, 30)
+
+# Simulate inventory adjustments
+ims.track_inventory(1, -5)  # Sold 5 keyboards
+ims.track_inventory(2, -10)  # Sold 10 mice
+
+# Check current stock levels
+print("Current stock levels:")
+print(f"Keyboard: {ims.get_product_stock(1)}")
+print(f"Mouse: {ims.get_product_stock(2)}")
+
+### Data Flow Diagram
+
+```
+User Input (Product ID/Name, Sales Data, Inventory Adjustments) -> Inventory Tracking Application -> Reorder Calculation Algorithm
+                 ^                                                                              ||                                                                              v
+           Alert on Low Stock                                                        Generate Reports (Inventory Turnover, Stockouts, Cost Implications)
+```
+
+### Pseudocode and Implementation
+
+#### Inventory Tracking Application
+
+```python
+class Product:
+    def __init__(self, product_id, name, initial_stock, reorder_point, reorder_quantity):
+        self.product_id = product_id
+        self.name = name
+        self.stock = initial_stock
+        self.reorder_point = reorder_point
+        self.reorder_quantity = reorder_quantity
+    
+    def update_stock(self, adjustment):
+        self.stock += adjustment
+
+class InventoryManagementSystem:
+    def __init__(self):
+        self.products = {}def add_product(self, product_id, name, initial_stock, reorder_point, reorder_quantity):
+        if product_id not in self.products:
+            self.products[product_id] = Product(product_id, name, initial_stock, reorder_point, reorder_quantity)
+        else:
+            print(f"Product with ID {product_id} already exists.")
+    
+    def track_inventory(self, product_id, adjustment):
+        if product_id in self.products:
+            self.products[product_id].update_stock(adjustment)
+            if self.products[product_id].stock < self.products[product_id].reorder_point:
+                self.generate_reorder_alert(product_id)
+        else:
+            print(f"Product with ID {product_id} does not exist.")
+    
+    def generate_reorder_alert(self, product_id):
+        print(f"Alert: Product {self.products[product_id].name} is below reorder point. Current stock: {self.products[product_id].stock}")
+    
+    def get_product_stock(self, product_id):
+        if product_id in self.products:
+            return self.products[product_id].stock
+        else:
+            return None
+
+# Example usage:
+ims = InventoryManagementSystem()
+ims.add_product(1, "Keyboard", 50, 10, 50)
+ims.add_product(2, "Mouse", 75, 15, 30)
+
+# Simulate inventory adjustments
+ims.track_inventory(1, -5)  # Sold 5 keyboards
+ims.track_inventory(2, -10)  # Sold 10 mice
+
+# Check current stock levels
+print("Current stock levels:")
+print(f"Keyboard: {ims.get_product_stock(1)}")
+print(f"Mouse: {ims.get_product_stock(2)}")
+```
+
+#### Reorder Calculation Algorithm (Example)
+
+```pythonclass ReorderOptimizer:
+    def __init__(self, demand_history, lead_time):
+        self.demand_history = demand_history  # List of historical demand data
+        self.lead_time = lead_time  # Lead time in days for ordering
+    
+    def calculate_reorder_point(self):
+        # Assuming normal distribution and constant lead time
+        mean_demand = sum(self.demand_history) / len(self.demand_history)
+        std_deviation = statistics.stdev(self.demand_history)
+        safety_factor = 1.65  # Z-score for 95% service level
+        
+        reorder_point = mean_demand * self.lead_time + safety_factor * std_deviation * math.sqrt(self.lead_time)
+        
+        return reorder_point
+    
+    def calculate_reorder_quantity(self):
+        # Economic Order Quantity (EOQ) calculation
+        # For simplicity, assuming constant demand and no quantity discountsannual_demand = sum(self.demand_history)
+        optimal_quantity = math.sqrt((2 * annual_demand * self.lead_time) / 1)  # EOQ formula
+        
+        return optimal_quantity
+
+# Example usage:
+demand_history = [20, 25, 30, 35, 28, 32, 27, 22, 26, 24]  # Example demand history
+lead_time = 7  # Example lead time
+optimizer = ReorderOptimizer(demand_history, lead_time)
+reorder_point = optimizer.calculate_reorder_point()
+reorder_quantity = optimizer.calculate_reorder_quantity()
+
+print(f"Reorder Point: {reorder_point}")
+print(f"Reorder Quantity: {reorder_quantity}")
+```
+
+### Documentation
+
+#### Algorithms for Reorder Optimization
+
+1. **Reorder Point Calculation**:- Uses historical demand data to calculate the average demand over a period and the standard deviation to estimate variability.
+   - Incorporates a safety factor (e.g., Z-score for a desired service level) to determine the reorder point that minimizes stockout risk.
+
+2. **Reorder Quantity Calculation**:
+   - Implements the Economic Order Quantity (EOQ) model to determine the optimal order quantity.
+   - Assumes constant demand and lead time, aiming to minimize total ordering and holding costs.
+
+#### Assumptions
+
+- **Demand Patterns**: Assumes demand follows a normal distribution or can be approximated as such for reorder point calculations.
+- **Lead Times**: Assumes lead times are constant and known, impacting the reorder point but not the EOQ calculations.
+
+#### User Interface
+
+A user-friendly interface can be developed using a GUI framework (e.g., Tkinter for desktopapplications or Flask/Django for web applications). This interface would allow users to:
+
+- Input product IDs or names to view current stock levels and receive alerts on low stock.
+- Generate reports on inventory turnover rates, stockout occurrences, and cost implications of overstock situations.
+- Display recommended reorder quantities and points based on historical data and algorithms implemented.
+
+### Improvements
+
+- **Dynamic Lead Time**: Incorporate variability in lead times to enhance accuracy in reorder point calculations.
+- **Demand Forecasting**: Implement more sophisticated forecasting models (e.g., ARIMA, exponential smoothing) for demand predictions.
+- **Integration with ERP Systems**: Integrate the inventory management system with enterprise resource planning (ERP) systems for seamless data flow and automation.
+- **Supplier Collaboration**: Establish partnerships with suppliers to streamline ordering processes and reduce lead times.By addressing these improvements, the inventory management system can achieve higher efficiency in inventory turnover, reduce stockouts, and optimize ordering decisions to minimize costs associated with overstock situations.
