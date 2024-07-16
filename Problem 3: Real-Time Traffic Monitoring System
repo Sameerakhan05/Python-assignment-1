@@ -1,0 +1,91 @@
+User Input (Starting Point, Destination) -> Python Application -> Traffic API (e.g., Google Maps Traffic API)
+                ^                                              |
+                |                                              v
+          Display Traffic Information <- JSON Response <- API Request
+
+TRAFFIC MONITERING SYSTEM:-
+
+import requests
+
+class TrafficMonitoringSystem:
+    def __init__(self, api_key):
+        self.api_key = api_keyself.base_url = 'https://maps.googleapis.com/maps/api/directions/json'
+    
+    def fetch_traffic_data(self, origin, destination):
+        params = {
+            'origin': origin,
+            'destination': destination,
+            'key': self.api_key,
+            'departure_time': 'now',
+            'traffic_model': 'best_guess',
+            'mode': 'driving'
+        }
+
+        try:
+            response = requests.get(self.base_url, params=params)
+            data = response.json()
+
+            if response.status_code == 200:
+                return data  # Return JSON data received from API
+            else:
+                print(f"Error fetching data: {data['error_message']}")
+                return Noneexcept requests.exceptions.RequestException as e:
+            print(f"Error fetching data: {e}")
+            return None
+
+    def display_traffic_info(self, data):
+        if data:
+            # Extract relevant traffic information
+            routes = data.get('routes', [])
+            if routes:
+                main_route = routes[0]
+                traffic_condition = main_route['summary']
+                estimated_time = main_route['legs'][0]['duration_in_traffic']['text']
+                incidents = main_route.get('warnings', [])
+
+                # Displaying traffic information
+                print(f"Traffic Conditions: {traffic_condition}")
+                print(f"Estimated Travel Time: {estimated_time}")
+                if incidents:
+                    print("Incidents/Warnings:")
+                    for incident in incidents:
+                        print(f"- {incident}")else:
+                    print("No incidents or warnings.")
+            else:
+                print("No routes found.")
+
+        else:
+            print("No traffic data available.")
+
+# Example usage:
+if __name__ == "__main__":
+    api_key = 'your_api_key_here'  # Replace with your actual API key
+    tms = TrafficMonitoringSystem(api_key)
+    origin = input("Enter starting point: ")
+    destination = input("Enter destination: ")
+    traffic_data = tms.fetch_traffic_data(origin, destination)
+    tms.display_traffic_info(traffic_data)
+
+Documentation
+API Integration and Methods
+API Integration:
+
+The system integrates with the Google Maps Directions API to fetch real-time traffic data.
+Constructs a request with parameters including origin, destination, API key, departure time (set to 'now' for real-time data), traffic model, and mode of travel.
+Fetch Traffic Data (fetch_traffic_data method):
+
+Sends an HTTP GET request to the API endpoint with constructed parameters.
+Handles JSON response to extract traffic conditions, estimated travel time, and any incidents or warnings along the route.
+Display Traffic Information (display_traffic_info method):
+
+Parses JSON response to extract and display relevant traffic information such as traffic conditions, estimated travel time, and incidents/warnings.
+Handles cases where no routes are found or no traffic data is available.
+Assumptions
+Real-Time Updates: Assumes real-time traffic data availability and updates from the Google Maps Traffic API.
+Mode of Travel: Primarily focused on driving mode; can be extended for other modes like walking or transit.
+API Key: Requires a valid Google Maps API key for access to the Directions API.Potential Improvements
+Alternative Routes: Enhance the application to suggest alternative routes based on current traffic conditions.
+User Preferences: Allow users to specify preferences such as avoiding tolls or highways.
+Historical Traffic Data: Integrate historical traffic data to provide more accurate predictions and route suggestions.
+Visual Interface: Develop a graphical interface (GUI) for easier interaction and visualization of traffic information.
+By incorporating these improvements, the traffic monitoring system can provide more comprehensive and user-friendly real-time updates, enhancing its utility for users navigating through urban environments or planning trips.
