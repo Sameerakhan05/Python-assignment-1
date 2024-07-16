@@ -1,0 +1,83 @@
+dATA FLOW DIAGRAM:-
+
+User Input (Location) -> Python Application -> Weather API (e.g., OpenWeatherMap)
+                ^                                          |
+                |                                          v
+         Display Weather Data <- JSON Response <- API Request
+
+
+# Import necessary libraries
+import requests
+import json
+
+# Function to fetch weather data from API
+def fetch_weather_data(location):
+    api_key = 'your_api_key_here'  # Replace with your actual API key
+    base_url = 'https://api.openweathermap.org/data/2.5/weather'
+
+    # Handling different location input types (city name or coordinates)if location.isdigit():  # Assuming input is coordinates (latitude, longitude)
+        params = {'lat': location.split(',')[0], 'lon': location.split(',')[1], 'appid': api_key, 'units': 'metric'}
+    else:  # Assuming input is city name
+        params = {'q': location, 'appid': api_key, 'units': 'metric'}
+
+    try:
+        response = requests.get(base_url, params=params)
+        data = response.json()
+
+        if response.status_code == 200:
+            return data  # Return JSON data received from API
+        else:
+            print(f"Error fetching data: {data['message']}")
+            return None
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")def display_weather_data(data):
+    if data:
+        # Extracting relevant weather information
+        temperature = data['main']['temp']
+        weather_desc = data['weather'][0]['description']
+        humidity = data['main']['humidity']
+        wind_speed = data['wind']['speed']
+
+        # Displaying weather information
+        print(f"Temperature: {temperature} °C")
+        print(f"Weather: {weather_desc}")
+        print(f"Humidity: {humidity}%")
+        print(f"Wind Speed: {wind_speed} m/s")
+    else:
+        print("No weather data available.")
+
+# Main function to run the application
+def main():
+    location = input("Enter city name or coordinates (latitude,longitude): ")
+    weather_data = fetch_weather_data(location)
+    display_weather_data(weather_data)
+
+if __name__ == "__main__":
+        return None
+
+# Function to display weather datamain()
+
+Documentation
+API Integration
+This Python application integrates with the OpenWeatherMap API to fetch real-time weather data. It uses the requests library to send HTTP requests to the API endpoint (https://api.openweathermap.org/data/2.5/weather) with parameters such as API key (appid), location (q for city name or lat, lon for coordinates), and units (metric for Celsius).
+
+Methods Used
+Fetching Weather Data (fetch_weather_data function):
+
+Constructs the API request based on user input (city name or coordinates).
+Sends an HTTP GET request to the API and handles the JSON response.
+Checks for errors and prints appropriate error messages.
+Displaying Weather Data (display_weather_data function):and wind speed from the JSON response.
+Prints the weather information in a readable format.
+Assumptions
+Input Handling: The application assumes the user inputs either a city name or coordinates in the format latitude,longitude.
+API Key: You need to replace 'your_api_key_here' with your actual OpenWeatherMap API key for the application to function properly.
+Potential Improvements
+Error Handling: Enhance error handling to cover more edge cases (e.g., network errors, invalid input formats).
+User Interface: Develop a graphical user interface (GUI) or web interface for better user interaction.
+Caching: Implement caching mechanisms to reduce the number of API calls for repetitive requests within a short period.
+Additional Weather Parameters: Expand the application to fetch and display more detailed weather parameters provided by the API.
+This system provides a basic framework for fetching and displaying weather data from an external API, which can be expanded and 
+
+Extracts relevant weather information such as temperature, weather description, humidity, improved based on specific requirements and additional features desired for the weather monitoring system.
